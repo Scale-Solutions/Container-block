@@ -88,38 +88,36 @@
           border-radius: {{ block.settings.border_radius }}px;
         {% endif %}
       }
-    }
 
-    {% if block.settings.enable_mobile_styling %}
-    /* mobile styling */
-    @media screen and (max-width: 749px) {
-      #container-{{ block.id }}{
-        display: flex;
-        flex-direction: {{ block.settings.content_direction_mobile }};
-        justify-content: {{ block.settings.horizontal_alignment_mobile }};
-        align-items: {{ block.settings.vertical_alignment_mobile }};
-        gap: {{ block.settings.gap_mobile }}px;
-        flex-wrap: {{ flex_wrap_mobile }};
-        width: {% if block.settings.width_mobile > 0 %}{{ block.settings.width_mobile }}%{%else%}auto{%endif%};
-        height: {% if block.settings.height_mobile > 0 %}{{ block.settings.height_mobile }}%{%else%}auto{%endif%};
-        border-radius: {{ block.settings.border_radius_mobile }}px;
-        padding-inline: {{ block.settings.padding_inline_mobile }}px;
-        padding-block: {{ block.settings.padding_block_mobile }}px;
-        {% if block.settings.border_mobile == "solid" %}
-          border: solid {{ block.settings.border_width_mobile }}px {{ block.settings.border_color_mobile }};    
+      {% if block.settings.enable_mobile_styling %}
+        /* mobile styling */
+        @media screen and (max-width: 749px) {
+          display: flex;
+          flex-direction: {{ block.settings.content_direction_mobile }};
+          justify-content: {{ block.settings.horizontal_alignment_mobile }};
+          align-items: {{ block.settings.vertical_alignment_mobile }};
+          gap: {{ block.settings.gap_mobile }}px;
+          flex-wrap: {{ flex_wrap_mobile }};
+          width: {% if block.settings.width_mobile > 0 %}{{ block.settings.width_mobile }}%{%else%}auto{%endif%};
+          height: {% if block.settings.height_mobile > 0 %}{{ block.settings.height_mobile }}%{%else%}auto{%endif%};
           border-radius: {{ block.settings.border_radius_mobile }}px;
-        {% endif %}
-
-        .background-media{
+          padding-inline: {{ block.settings.padding_inline_mobile }}px;
+          padding-block: {{ block.settings.padding_block_mobile }}px;
           {% if block.settings.border_mobile == "solid" %}
+            border: solid {{ block.settings.border_width_mobile }}px {{ block.settings.border_color_mobile }};    
             border-radius: {{ block.settings.border_radius_mobile }}px;
           {% endif %}
-        }
-      }
-    }
-    {% endif %}
-  {% endif %}
 
+          .background-media{
+            {% if block.settings.border_mobile == "solid" %}
+              border-radius: {{ block.settings.border_radius_mobile }}px;
+            {% endif %}
+          }
+        }
+      {% endif %}
+
+    }
+  {% endif %}
 
   {% if block.settings.styling_level == "advance" %}
 
