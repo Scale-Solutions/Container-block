@@ -1,0 +1,1711 @@
+{%- comment -%}
+  =============================================================================
+  Container
+  =============================================================================
+  Inspired by: group.liquid from Horizon Theme
+  Developed by: Sajaath mohamed
+  Company: Scale solutions
+  Description: This block was custom-built to extend functionality while
+               maintaining the design and structure principles of Horizon's
+               group.liquid. Use this block within sections where grouping
+               of content is required.
+  =============================================================================
+{%- endcomment -%}
+
+{% comment %} Styling {% endcomment %}
+{% style %}
+   #container-{{ block.id }}{
+    position: relative;
+    background-color: {{ block.settings.background_color }};
+    color: {{ block.settings.text_color }}; 
+
+    *{
+        z-index: 2;
+    }
+    .background-media{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index:1;
+        overflow: hidden;
+    }
+
+    .background-media video{
+        width: 100%;
+        height: 100%;
+        object-fit: {{ block.settings.video_position }};
+    }
+    .background-media img{
+        width: 100%;
+        height: 100%;
+        object-fit: {{ block.settings.background_image_position }};
+    }
+  }
+{% endstyle %}
+
+
+{% if block.settings.styling_level == "basic" %}
+
+    {% capture flex_wrap %}
+       {%liquid 
+            if block.settings.wrap_content 
+                echo "wrap" 
+            else 
+                echo "nowrap" 
+            endif
+        %}
+    {% endcapture %}
+    {% capture flex_wrap_mobile %}
+       {%liquid 
+            if block.settings.wrap_content_mobile 
+                echo "wrap" 
+            else 
+                echo "nowrap" 
+            endif
+        %}
+    {% endcapture %}
+
+    {% style %}
+
+        #container-{{ block.id }}{
+            display: flex;
+            flex-direction: {{ block.settings.content_direction }};
+            justify-content: {{ block.settings.horizontal_alignment }};
+            align-items: {{ block.settings.vertical_alignment }};
+            gap: {{ block.settings.gap }}px;
+            flex-wrap: {{ flex_wrap }};
+            width: {% if block.settings.width > 0 %}{{ block.settings.width }}%{%else%}auto{%endif%};
+            height: {% if block.settings.height > 0 %}{{ block.settings.height }}%{%else%}auto{%endif%};
+            padding-inline: {{ block.settings.padding_inline }}px;
+            padding-block: {{ block.settings.padding_block }}px;
+            {% if block.settings.border == "solid" %}
+                border: solid {{ block.settings.border_width }}px {{ block.settings.border_color }};    
+                border-radius: {{ block.settings.border_radius }}px;
+            {% endif %}
+
+            .background-media{
+                {% if block.settings.border == "solid" %}
+                    border-radius: {{ block.settings.border_radius }}px;
+                {% endif %}
+            }
+        }
+
+        {% if block.settings.enable_mobile_styling %}
+        /* mobile styling */
+        @media screen and (max-width: 749px) {
+
+            #container-{{ block.id }}{
+                display: flex;
+                flex-direction: {{ block.settings.content_direction_mobile }};
+                justify-content: {{ block.settings.horizontal_alignment_mobile }};
+                align-items: {{ block.settings.vertical_alignment_mobile }};
+                gap: {{ block.settings.gap_mobile }}px;
+                flex-wrap: {{ flex_wrap_mobile }};
+                width: {% if block.settings.width_mobile > 0 %}{{ block.settings.width_mobile }}%{%else%}auto{%endif%};
+                height: {% if block.settings.height_mobile > 0 %}{{ block.settings.height_mobile }}%{%else%}auto{%endif%};
+                border-radius: {{ block.settings.border_radius_mobile }}px;
+                padding-inline: {{ block.settings.padding_inline_mobile }}px;
+                padding-block: {{ block.settings.padding_block_mobile }}px;
+                {% if block.settings.border_mobile == "solid" %}
+                    border: solid {{ block.settings.border_width_mobile }}px {{ block.settings.border_color_mobile }};    
+                    border-radius: {{ block.settings.border_radius_mobile }}px;
+                {% endif %}
+
+                .background-media{
+                    {% if block.settings.border_mobile == "solid" %}
+                        border-radius: {{ block.settings.border_radius_mobile }}px;
+                    {% endif %}
+                }
+            }
+        }
+        {% endif %}
+    {% endstyle %}
+{% endif %}
+
+
+{% if block.settings.styling_level == "advance" %}
+
+    {% capture advanced_flex_wrap %}
+       {%liquid 
+            if block.settings.advanced_wrap_content 
+                echo "wrap" 
+            else 
+                echo "nowrap" 
+            endif
+        %}
+    {% endcapture %}
+
+    {% style %}
+        #container-{{ block.id }}{
+            display: flex;
+            flex-direction: {{ block.settings.advanced_content_direction }};
+            justify-content: {{ block.settings.advanced_horizontal_alignment }};
+            align-items: {{ block.settings.advanced_vertical_alignment }};
+            gap: {{ block.settings.advanced_gap }}px;
+            flex-wrap: {{ advanced_flex_wrap }};
+            width: {% if block.settings.advanced_width > 0 %}{{ block.settings.advanced_width }}%{%else%}auto{%endif%};
+            {% if block.settings.advanced_max_width > 0 and block.settings.advanced_width == 0 %}
+               max-width: {{ block.settings.advanced_max_width }}%;
+            {% endif %}   
+            height: {% if block.settings.advanced_height > 0 %}{{ block.settings.advanced_height }}%{%else%}auto{%endif%};
+            {% if block.settings.advanced_max_height > 0 and block.settings.advanced_height == 0 %}
+               max-height: {{ block.settings.advanced_max_height }}%;
+            {% endif %}  
+            padding-inline: {{ block.settings.advanced_padding_inline }}px;
+            padding-block: {{ block.settings.advanced_padding_block }}px;
+            {% if block.settings.advanced_border == "solid" %}
+                border: solid {{ block.settings.advanced_border_width }}px {{ block.settings.advanced_border_color }};    
+                border-radius: {{ block.settings.advanced_border_radius }}px;
+            {% endif %}
+
+            .background-media{
+                {% if block.settings.advanced_border == "solid" %}
+                    border-radius: {{ block.settings.advanced_border_radius }}px;
+                {% endif %}
+            }
+            {{ block.settings.advanced_css }}
+
+
+            {% for i in (1..4) %}
+                {% assign media_query = "advanced_media_query_" | append : i %}
+                {% if block.settings[media_query] %}
+
+                    {% assign screen_width = "advanced_media_query_" | append : i | append: "_screen_width" %}
+                    {% assign screen_size = "advanced_media_query_" | append : i | append: "_screen_size" %}
+                    {% assign content_direction = "advanced_media_query_" | append : i | append: "_content_direction" %}
+                    {% assign horizontal_alignment = "advanced_media_query_" | append : i | append: "_horizontal_alignment" %}
+                    {% assign vertical_alignment = "advanced_media_query_" | append : i | append: "_vertical_alignment" %}
+                    {% assign gap = "advanced_media_query_" | append : i | append: "_gap" %}
+                    {% assign wrap_content = "advanced_media_query_" | append : i | append: "_wrap_content" %}
+                    {% assign width = "advanced_media_query_" | append : i | append: "_width" %}
+                    {% assign max_width = "advanced_media_query_" | append : i | append: "_max_width" %}
+                    {% assign height = "advanced_media_query_" | append : i | append: "_height" %}
+                    {% assign max_height = "advanced_media_query_" | append : i | append: "_max_height" %}
+                    {% assign padding_inline = "advanced_media_query_" | append : i | append: "_padding_inline" %}
+                    {% assign padding_block = "advanced_media_query_" | append : i | append: "_padding_block" %}
+                    {% assign border = "advanced_media_query_" | append : i | append: "_border" %}
+                    {% assign border_width = "advanced_media_query_" | append : i | append: "_border_width" %}
+                    {% assign border_color = "advanced_media_query_" | append : i | append: "_border_color" %}
+                    {% assign border_radius = "advanced_media_query_" | append : i | append: "_border_radius" %}
+                    {% assign css = "advanced_media_query_" | append : i | append: "_css" %}
+
+                    @media screen and ({{ block.settings[screen_width] }}-width: {{ block.settings[screen_size] }}px) {
+                        flex-direction: {{ block.settings[content_direction] }};
+                        justify-content: {{ block.settings[horizontal_alignment] }};
+                        align-items: {{ block.settings[vertical_alignment] }};
+                        gap: {{ block.settings[gap] }}px;
+                        flex-wrap: {%liquid 
+                            if block.settings[wrap_content] 
+                                echo "wrap" 
+                            else 
+                                echo "nowrap" 
+                            endif
+                        %};
+                        width: {% if block.settings[width] > 0 %}{{ block.settings[width] }}%{%else%}auto{%endif%};
+                        {% if block.settings[max_width] > 0 and block.settings[width] == 0 %}
+                            max-width: {{ block.settings[max_width] }}%;
+                        {% endif %}  
+                        height: {% if block.settings[height] > 0 %}{{ block.settings[height] }}%{%else%}auto{%endif%};
+                        {% if block.settings[max_height] > 0 and block.settings[height] == 0 %}
+                            max-height: {{ block.settings[max_height] }}%;
+                        {% endif %}  
+                        padding-inline: {{ block.settings[padding_inline] }}px;
+                        padding-block: {{ block.settings[padding_block] }}px;
+                        {% if block.settings[border] == "solid" %}
+                            border: solid {{ block.settings[border_width] }}px {{ block.settings[border_color] }};    
+                            border-radius: {{ block.settings[border_radius] }}px;
+                        {% endif %}
+
+                        .background-media{
+                            {% if block.settings[border] == "solid" %}
+                                border-radius: {{ block.settings[border_radius] }}px;
+                            {% endif %}
+                        }
+                        {{ block.settings[css] }}
+                    }
+                {% endif %}    
+            {% endfor %}
+        }
+    {% endstyle %}
+{% endif %}
+{% comment %} Styling End {% endcomment %}
+
+
+{% comment %} overlay {% endcomment %}
+{% capture overlay %}
+  {% if block.settings.background_media != "none" %}
+    <div class="background-media">
+        {% if block.settings.background_media == "video" and block.settings.video != blank %}
+            <video
+                aria-hidden="true"
+                poster="{{ block.settings.video.preview_image | image_url }}"
+                playsinline
+                muted
+                autoplay
+                loop>
+                {% for sourceElement in block.settings.video.sources %}
+                <source
+                    src="{{ sourceElement.url }}"
+                    type="{{ sourceElement.mime_type }}"
+                >
+                {% endfor %}
+            </video>
+        {% endif %}
+
+        {% if block.settings.background_media == "image" and block.settings.background_image != blank %}
+            {{ block.settings.background_image | image_url: width: 3840 | image_tag: loading: 'eager', fetchpriority: "high" }}
+        {% endif %}
+
+    </div>
+    {% endif %}
+{% endcapture %}
+{% comment %} overlay End {% endcomment %}
+
+
+{% comment %} Container {% endcomment %}
+<{% if block.settings.link != blank %}a href="{{ block.settings.link }}" {% if block.settings.open_in_new_tab %}target="_blank"{% endif %} {% else %}div{% endif %} id="container-{{ block.id }}">
+  {{ overlay }}
+  {% content_for 'blocks' %}
+</{% if block.settings.link != blank %}a{% else %}div{% endif %} >
+{% comment %} Container End {% endcomment %}
+
+{% schema %}
+{
+  "name": "Container",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Merchants can use the basic styling options, while advanced styling is recommended only for developers or users familiar with CSS."
+    },
+    {
+      "type": "select",
+      "id": "styling_level",
+      "label": "Styling level",
+      "options": [
+        {
+          "value": "basic",
+          "label": "Basic"
+        },
+        {
+          "value": "advance",
+          "label": "Advanced"
+        }
+      ],
+      "default": "basic"
+    },
+    {
+      "type": "header",
+      "content": "Basic styling",
+      "visible_if": "{{ block.settings.styling_level == 'basic' }}"
+    },
+    {
+      "type": "header",
+      "content": "🖥️ Desktop",
+      "visible_if": "{{ block.settings.styling_level == 'basic' }}"
+    },
+    {
+      "type": "select",
+      "id": "content_direction",
+      "label": "Direction",
+      "options": [
+        {
+          "value": "column",
+          "label": "Vertical"
+        },
+        {
+          "value": "row",
+          "label": "Horizontal"
+        }
+      ],
+      "default": "column",
+      "visible_if": "{{ block.settings.styling_level == 'basic' }}"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        },
+        {
+          "value": "space-between",
+          "label": "Space between"
+        }
+      ],
+      "default": "flex-start",
+      "visible_if": "{{ block.settings.styling_level == 'basic' and block.settings.content_direction == 'row' }}"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "label": "Position",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Top / Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom / Right"
+        }
+      ],
+      "default": "center",
+      "visible_if": "{{  block.settings.styling_level == 'basic' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "wrap_content",
+      "label": "Wrap content",
+      "default": false,
+      "visible_if": "{{ block.settings.styling_level == 'basic' and block.settings.content_direction == 'row' }}"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 12,
+      "visible_if": "{{ block.settings.styling_level == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "width",
+      "label": "Width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "info": "Use 0 to let it adjust automatically.",
+      "visible_if": "{{ block.settings.styling_level == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "label": "Height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "info": "Use 0 to let it adjust automatically.",
+      "visible_if": "{{ block.settings.styling_level == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_inline",
+      "label": "Padding horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_block",
+      "label": "Padding vertical",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'basic' }}"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "Borders",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "solid",
+          "label": "Solid"
+        }
+      ],
+      "default": "none",
+      "visible_if": "{{ block.settings.styling_level == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Border width",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'basic' and block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'basic' and block.settings.border != 'none' }}"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#000",
+      "visible_if": "{{ block.settings.styling_level == 'basic' and block.settings.border != 'none' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_mobile_styling",
+      "label": "▶️ Enable mobile styling",
+      "default": false,
+      "visible_if": "{{ block.settings.styling_level == 'basic' }}"
+    },
+    {
+      "type": "header",
+      "content": "📱 Mobile",
+      "visible_if": "{{ block.settings.styling_level == 'basic' and block.settings.enable_mobile_styling }}"
+    },
+    {
+      "type": "select",
+      "id": "content_direction_mobile",
+      "label": "Direction",
+      "options": [
+        {
+          "value": "column",
+          "label": "Vertical"
+        },
+        {
+          "value": "row",
+          "label": "Horizontal"
+        }
+      ],
+      "default": "column",
+      "visible_if": "{{ block.settings.styling_level == 'basic' and block.settings.enable_mobile_styling }}"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment_mobile",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        },
+        {
+          "value": "space-between",
+          "label": "Space between"
+        }
+      ],
+      "default": "flex-start",
+      "visible_if": "{{ block.settings.styling_level == 'basic' and block.settings.content_direction_mobile == 'row' and block.settings.enable_mobile_styling }}"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment_mobile",
+      "label": "Position",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Top / left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom / right"
+        }
+      ],
+      "default": "center",
+      "visible_if": "{{  block.settings.styling_level == 'basic' and block.settings.enable_mobile_styling }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "wrap_content_mobile",
+      "label": "Wrap content",
+      "default": false,
+      "visible_if": "{{ block.settings.styling_level == 'basic' and block.settings.content_direction_mobile == 'row' and block.settings.enable_mobile_styling }}"
+    },
+    {
+      "type": "range",
+      "id": "gap_mobile",
+      "label": "Gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 12,
+      "visible_if": "{{ block.settings.styling_level == 'basic' and block.settings.enable_mobile_styling }}"
+    },
+    {
+      "type": "range",
+      "id": "width_mobile",
+      "label": "Width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "info": "Use 0 to let it adjust automatically.",
+      "visible_if": "{{ block.settings.styling_level == 'basic' and block.settings.enable_mobile_styling }}"
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "label": "Height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "info": "Use 0 to let it adjust automatically.",
+      "visible_if": "{{ block.settings.styling_level == 'basic' and block.settings.enable_mobile_styling }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_inline_mobile",
+      "label": "Padding horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'basic' and block.settings.enable_mobile_styling }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_block_mobile",
+      "label": "Padding vertical",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'basic' and block.settings.enable_mobile_styling }}"
+    },
+    {
+      "type": "select",
+      "id": "border_mobile",
+      "label": "Borders",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "solid",
+          "label": "Solid"
+        }
+      ],
+      "default": "none",
+      "visible_if": "{{ block.settings.styling_level == 'basic' and block.settings.enable_mobile_styling }}"
+    },
+    {
+      "type": "range",
+      "id": "border_width_mobile",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Border width",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'basic' and block.settings.border_mobile != 'none' and block.settings.enable_mobile_styling }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius_mobile",
+      "label": "Border radius",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'basic' and block.settings.border_mobile != 'none' and block.settings.enable_mobile_styling }}"
+    },
+    {
+      "type": "color",
+      "id": "border_color_mobile",
+      "label": "Border color",
+      "default": "#000",
+      "visible_if": "{{ block.settings.styling_level == 'basic' and block.settings.border_mobile != 'none' and block.settings.enable_mobile_styling }}"
+    },
+
+
+
+
+
+
+
+    {
+      "type": "header",
+      "content": "Advance styling",
+      "visible_if": "{{ block.settings.styling_level == 'advance' }}"
+    },
+    {
+      "type": "select",
+      "id": "advanced_content_direction",
+      "label": "Direction",
+      "options": [
+        {
+          "value": "column",
+          "label": "Vertical"
+        },
+        {
+          "value": "row",
+          "label": "Horizontal"
+        }
+      ],
+      "default": "column",
+      "visible_if": "{{ block.settings.styling_level == 'advance' }}"
+    },
+    {
+      "type": "select",
+      "id": "advanced_horizontal_alignment",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        },
+        {
+          "value": "space-between",
+          "label": "Space between"
+        }
+      ],
+      "default": "flex-start",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_content_direction == 'row' }}"
+    },
+    {
+      "type": "select",
+      "id": "advanced_vertical_alignment",
+      "label": "Position",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Top / Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom / Right"
+        }
+      ],
+      "default": "center",
+      "visible_if": "{{  block.settings.styling_level == 'advance' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "advanced_wrap_content",
+      "label": "Wrap content",
+      "default": false,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_content_direction == 'row' }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_gap",
+      "label": "Gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 12,
+      "visible_if": "{{ block.settings.styling_level == 'advance' }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_width",
+      "label": "Width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "info": "Use 0 to let it adjust automatically.",
+      "visible_if": "{{ block.settings.styling_level == 'advance' }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_max_width",
+      "label": "Max width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 0,
+      "info": "Use 0 to not to apply max width",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_width == 0 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_height",
+      "label": "Height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "info": "Use 0 to let it adjust automatically.",
+      "visible_if": "{{ block.settings.styling_level == 'advance' }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_max_height",
+      "label": "Max height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 0,
+      "info": "Use 0 to not to apply max height",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_height == 0 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_padding_inline",
+      "label": "Padding horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'advance' }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_padding_block",
+      "label": "Padding vertical",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'advance' }}"
+    },
+    {
+      "type": "select",
+      "id": "advanced_border",
+      "label": "Borders",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "solid",
+          "label": "Solid"
+        }
+      ],
+      "default": "none",
+      "visible_if": "{{ block.settings.styling_level == 'advance' }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_border_width",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Border width",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_border != 'none' }}"
+    },
+    {
+      "type": "color",
+      "id": "advanced_border_color",
+      "label": "Border color",
+      "default": "#000",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_border != 'none' }}"
+    },
+    {
+      "type": "textarea",
+      "id": "advanced_css",
+      "label": "ccs",
+      "visible_if": "{{ block.settings.styling_level == 'advance' }}"
+    },
+
+    {
+      "type": "header",
+      "content": "📐 Media query 01",
+      "visible_if": "{{ block.settings.styling_level == 'advance' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "advanced_media_query_1",
+      "label": "▶️ Enable",
+      "default": false,
+      "visible_if": "{{ block.settings.styling_level == 'advance' }}"
+    },
+    {
+      "type": "select",
+      "id": "advanced_media_query_1_screen_width",
+      "label": "Width",
+      "options": [
+        {
+          "value": "min",
+          "label": "Min"
+        },
+        {
+          "value": "max",
+          "label": "Max"
+        }
+      ],
+      "default": "min",
+      "visible_if": "{{ block.settings.advanced_media_query_1 and block.settings.styling_level == 'advance' }}"
+    },
+    {
+      "type": "number",
+      "id": "advanced_media_query_1_screen_size",
+      "label": "Screen size",
+      "visible_if": "{{ block.settings.advanced_media_query_1 and block.settings.styling_level == 'advance' }}"
+    },
+      {
+      "type": "select",
+      "id": "advanced_media_query_1_content_direction",
+      "label": "Direction",
+      "options": [
+        {
+          "value": "column",
+          "label": "Vertical"
+        },
+        {
+          "value": "row",
+          "label": "Horizontal"
+        }
+      ],
+      "default": "column",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_1 }}"
+    },
+    {
+      "type": "select",
+      "id": "advanced_media_query_1_horizontal_alignment",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        },
+        {
+          "value": "space-between",
+          "label": "Space between"
+        }
+      ],
+      "default": "flex-start",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_content_direction == 'row' and block.settings.advanced_media_query_1 }}"
+    },
+    {
+      "type": "select",
+      "id": "advanced_media_query_1_vertical_alignment",
+      "label": "Position",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Top / Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom / Right"
+        }
+      ],
+      "default": "center",
+      "visible_if": "{{  block.settings.styling_level == 'advance' and block.settings.advanced_media_query_1 }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "advanced_media_query_1_wrap_content",
+      "label": "Wrap content",
+      "default": false,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_1_content_direction == 'row' and block.settings.advanced_media_query_1 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_1_gap",
+      "label": "Gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 12,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_1 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_1_width",
+      "label": "Width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "info": "Use 0 to let it adjust automatically.",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_1 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_1_max_width",
+      "label": "Max width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 0,
+      "info": "Use 0 to not to apply max width",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_1_width == 0 and block.settings.advanced_media_query_1 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_1_height",
+      "label": "Height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "info": "Use 0 to let it adjust automatically.",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_1 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_1_max_height",
+      "label": "Max height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 0,
+      "info": "Use 0 to not to apply max height",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_1_height == 0 and block.settings.advanced_media_query_1 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_1_padding_inline",
+      "label": "Padding horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_1 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_1_padding_block",
+      "label": "Padding vertical",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_1 }}"
+    },
+    {
+      "type": "select",
+      "id": "advanced_media_query_1_border",
+      "label": "Borders",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "solid",
+          "label": "Solid"
+        }
+      ],
+      "default": "none",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_1 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_1_border_width",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Border width",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_1_border != 'none' and block.settings.advanced_media_query_1 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_1_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_1_border != 'none' and block.settings.advanced_media_query_1 }}"
+    },
+    {
+      "type": "color",
+      "id": "advanced_media_query_1_border_color",
+      "label": "Border color",
+      "default": "#000",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_1_border != 'none' and block.settings.advanced_media_query_1 }}"
+    },
+    {
+      "type": "textarea",
+      "id": "advanced_media_query_1_css",
+      "label": "ccs",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_1 }}"
+    },
+
+    {
+      "type": "header",
+      "content": "📐 Media query 02",
+      "visible_if": "{{ block.settings.styling_level == 'advance' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "advanced_media_query_2",
+      "label": "▶️ Enable",
+      "default": false,
+      "visible_if": "{{ block.settings.styling_level == 'advance' }}"
+    },
+    {
+      "type": "select",
+      "id": "advanced_media_query_2_screen_width",
+      "label": "Width",
+      "options": [
+        {
+          "value": "min",
+          "label": "Min"
+        },
+        {
+          "value": "max",
+          "label": "Max"
+        }
+      ],
+      "default": "min",
+      "visible_if": "{{ block.settings.advanced_media_query_2 and block.settings.styling_level == 'advance' }}"
+    },
+    {
+      "type": "number",
+      "id": "advanced_media_query_2_screen_size",
+      "label": "Screen size",
+      "visible_if": "{{ block.settings.advanced_media_query_2 and block.settings.styling_level == 'advance' }}"
+    },
+      {
+      "type": "select",
+      "id": "advanced_media_query_2_content_direction",
+      "label": "Direction",
+      "options": [
+        {
+          "value": "column",
+          "label": "Vertical"
+        },
+        {
+          "value": "row",
+          "label": "Horizontal"
+        }
+      ],
+      "default": "column",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_2 }}"
+    },
+    {
+      "type": "select",
+      "id": "advanced_media_query_2_horizontal_alignment",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        },
+        {
+          "value": "space-between",
+          "label": "Space between"
+        }
+      ],
+      "default": "flex-start",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_content_direction == 'row' and block.settings.advanced_media_query_2 }}"
+    },
+    {
+      "type": "select",
+      "id": "advanced_media_query_2_vertical_alignment",
+      "label": "Position",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Top / Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom / Right"
+        }
+      ],
+      "default": "center",
+      "visible_if": "{{  block.settings.styling_level == 'advance' and block.settings.advanced_media_query_2 }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "advanced_media_query_2_wrap_content",
+      "label": "Wrap content",
+      "default": false,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_2_content_direction == 'row' and block.settings.advanced_media_query_2 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_2_gap",
+      "label": "Gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 12,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_2 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_2_width",
+      "label": "Width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "info": "Use 0 to let it adjust automatically.",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_2 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_2_max_width",
+      "label": "Max width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 0,
+      "info": "Use 0 to not to apply max width",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_2_width == 0 and block.settings.advanced_media_query_2 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_2_height",
+      "label": "Height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "info": "Use 0 to let it adjust automatically.",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_2 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_2_max_height",
+      "label": "Max height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 0,
+      "info": "Use 0 to not to apply max height",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_2_height == 0 and block.settings.advanced_media_query_2 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_2_padding_inline",
+      "label": "Padding horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_2 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_2_padding_block",
+      "label": "Padding vertical",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_2 }}"
+    },
+    {
+      "type": "select",
+      "id": "advanced_media_query_2_border",
+      "label": "Borders",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "solid",
+          "label": "Solid"
+        }
+      ],
+      "default": "none",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_2 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_2_border_width",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Border width",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_2_border != 'none' and block.settings.advanced_media_query_2 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_2_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_2_border != 'none' and block.settings.advanced_media_query_2 }}"
+    },
+    {
+      "type": "color",
+      "id": "advanced_media_query_2_border_color",
+      "label": "Border color",
+      "default": "#000",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_2_border != 'none' and block.settings.advanced_media_query_2 }}"
+    },
+    {
+      "type": "textarea",
+      "id": "advanced_media_query_2_css",
+      "label": "ccs",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_2 }}"
+    },
+
+    {
+      "type": "header",
+      "content": "📐 Media query 03",
+      "visible_if": "{{ block.settings.styling_level == 'advance' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "advanced_media_query_3",
+      "label": "▶️ Enable",
+      "default": false,
+      "visible_if": "{{ block.settings.styling_level == 'advance' }}"
+    },
+    {
+      "type": "select",
+      "id": "advanced_media_query_3_screen_width",
+      "label": "Width",
+      "options": [
+        {
+          "value": "min",
+          "label": "Min"
+        },
+        {
+          "value": "max",
+          "label": "Max"
+        }
+      ],
+      "default": "min",
+      "visible_if": "{{ block.settings.advanced_media_query_3 and block.settings.styling_level == 'advance' }}"
+    },
+    {
+      "type": "number",
+      "id": "advanced_media_query_3_screen_size",
+      "label": "Screen size",
+      "visible_if": "{{ block.settings.advanced_media_query_3 and block.settings.styling_level == 'advance' }}"
+    },
+      {
+      "type": "select",
+      "id": "advanced_media_query_3_content_direction",
+      "label": "Direction",
+      "options": [
+        {
+          "value": "column",
+          "label": "Vertical"
+        },
+        {
+          "value": "row",
+          "label": "Horizontal"
+        }
+      ],
+      "default": "column",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_3 }}"
+    },
+    {
+      "type": "select",
+      "id": "advanced_media_query_3_horizontal_alignment",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        },
+        {
+          "value": "space-between",
+          "label": "Space between"
+        }
+      ],
+      "default": "flex-start",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_content_direction == 'row' and block.settings.advanced_media_query_3 }}"
+    },
+    {
+      "type": "select",
+      "id": "advanced_media_query_3_vertical_alignment",
+      "label": "Position",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Top / Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom / Right"
+        }
+      ],
+      "default": "center",
+      "visible_if": "{{  block.settings.styling_level == 'advance' and block.settings.advanced_media_query_3 }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "advanced_media_query_3_wrap_content",
+      "label": "Wrap content",
+      "default": false,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_3_content_direction == 'row' and block.settings.advanced_media_query_3 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_3_gap",
+      "label": "Gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 12,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_3 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_3_width",
+      "label": "Width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "info": "Use 0 to let it adjust automatically.",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_3 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_3_max_width",
+      "label": "Max width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 0,
+      "info": "Use 0 to not to apply max width",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_3_width == 0 and block.settings.advanced_media_query_3 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_3_height",
+      "label": "Height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "info": "Use 0 to let it adjust automatically.",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_3 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_3_max_height",
+      "label": "Max height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 0,
+      "info": "Use 0 to not to apply max height",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_3_height == 0 and block.settings.advanced_media_query_3 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_3_padding_inline",
+      "label": "Padding horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_3 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_3_padding_block",
+      "label": "Padding vertical",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_3 }}"
+    },
+    {
+      "type": "select",
+      "id": "advanced_media_query_3_border",
+      "label": "Borders",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "solid",
+          "label": "Solid"
+        }
+      ],
+      "default": "none",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_3 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_3_border_width",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Border width",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_3_border != 'none' and block.settings.advanced_media_query_3 }}"
+    },
+    {
+      "type": "range",
+      "id": "advanced_media_query_3_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_3_border != 'none' and block.settings.advanced_media_query_3 }}"
+    },
+    {
+      "type": "color",
+      "id": "advanced_media_query_3_border_color",
+      "label": "Border color",
+      "default": "#000",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_3_border != 'none' and block.settings.advanced_media_query_3 }}"
+    },
+    {
+      "type": "textarea",
+      "id": "advanced_media_query_3_css",
+      "label": "ccs",
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_3 }}"
+    },
+
+    {
+      "type": "header",
+      "content": "🎨 Appearance"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color"
+    },
+    {
+      "type": "select",
+      "id": "background_media",
+      "label": "Background media",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "video",
+          "label": "Video"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video",
+      "visible_if": "{{ block.settings.background_media == 'video' }}"
+    },
+    {
+      "type": "select",
+      "id": "video_position",
+      "label": "Video position",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover"
+        },
+        {
+          "value": "contain",
+          "label": "Contain"
+        }
+      ],
+      "default": "cover",
+      "visible_if": "{{ block.settings.background_media == 'video' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Image",
+      "visible_if": "{{ block.settings.background_media == 'image' }}"
+    },
+    {
+      "type": "select",
+      "id": "background_image_position",
+      "label": "Image position",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover"
+        },
+        {
+          "value": "fit",
+          "label": "Fit"
+        }
+      ],
+      "default": "cover",
+      "visible_if": "{{ block.settings.background_media == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "🔗 Linking"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_in_new_tab",
+      "label": "Open in new tab",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Container",
+      "category": "Layout"
+    }
+  ]
+}
+{% endschema %}
