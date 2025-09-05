@@ -1,4 +1,4 @@
-# Custom Theme Block for Shopify
+# Container Theme Block for Shopify
 
 A Container theme block inspired by `group.liquid` from the **Horizon Theme**. This block extends functionality while maintaining clean design principles.
 
