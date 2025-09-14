@@ -227,6 +227,13 @@
       {% endfor %}
     
   {% endif %}
+
+  {% if block.settings.styling_level == "custom" %}
+    {{ container_id }}{
+      {{ block.settings.custom_css }}
+    }
+  {% endif %}
+
 {% endstyle %}
 {% comment %} Styling End {% endcomment %}
 
@@ -273,7 +280,7 @@
 
 
 {% comment %} Container {% endcomment %}
-<div id="container-{{ block.id }}" class="{{ block.settings.advanced_classes }}" {{ block.shopify_attributes }}>
+<div id="container-{{ block.id }}" class="{{ block.settings.advanced_classes }} {{ block.settings.custom_classes }}" {{ block.shopify_attributes }}>
   {{ overlay }}
   {% content_for 'blocks' %}
 </div>
@@ -303,7 +310,11 @@
         },
         {
           "value": "advance",
-          "label": "Advanced"
+          "label": "🚀 Advanced"
+        },
+        {
+          "value": "custom",
+          "label": "🔧 Custom"
         }
       ],
       "default": "basic"
@@ -882,13 +893,15 @@
       "type": "textarea",
       "id": "advanced_css",
       "label": "ccs",
-      "visible_if": "{{ block.settings.styling_level == 'advance' }}"
+      "visible_if": "{{ block.settings.styling_level == 'advance' }}",
+      "info": "Add your custom CSS here to style this container. Use valid CSS syntax."
     },
     {
       "type": "text",
       "id": "advanced_classes",
       "label": "Class",
-      "visible_if": "{{ block.settings.styling_level == 'advance' }}"
+      "visible_if": "{{ block.settings.styling_level == 'advance' }}",
+      "info": "Enter custom CSS classes for this block. You can target these classes in your section’s CSS editor to apply custom styles and fully customize this block."
     },
 
     {
@@ -1127,7 +1140,9 @@
       "type": "textarea",
       "id": "advanced_media_query_1_css",
       "label": "ccs",
-      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_1 }}"
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_1 }}",
+      "info": "Add your custom CSS here to style this container. Use valid CSS syntax."
+
     },
     {
       "type": "header",
@@ -1365,7 +1380,9 @@
       "type": "textarea",
       "id": "advanced_media_query_2_css",
       "label": "ccs",
-      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_2 }}"
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_2 }}",
+      "info": "Add your custom CSS here to style this container. Use valid CSS syntax."
+
     },
 
     {
@@ -1604,9 +1621,24 @@
       "type": "textarea",
       "id": "advanced_media_query_3_css",
       "label": "ccs",
-      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_3 }}"
-    },
+      "visible_if": "{{ block.settings.styling_level == 'advance' and block.settings.advanced_media_query_3 }}",
+      "info": "Add your custom CSS here to style this container. Use valid CSS syntax."
 
+    },
+    {
+      "type": "text",
+      "id": "custom_classes",
+      "label": "Class",
+      "visible_if": "{{ block.settings.styling_level == 'custom' }}",
+      "info": "Enter custom CSS classes for this block. You can target these classes in your section’s CSS editor to apply custom styles and fully customize this block."
+    },
+    {
+      "type": "textarea",
+      "id": "custom_css",
+      "label": "ccs",
+      "visible_if": "{{ block.settings.styling_level == 'custom' }}",
+      "info": "Add custom CSS to style this container. Ensure valid CSS syntax. For best practices, we recommend using the section CSS editor instead."
+    },
     {
       "type": "header",
       "content": "🎨 Appearance"
