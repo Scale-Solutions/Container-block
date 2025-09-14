@@ -268,7 +268,7 @@
 
 
 {% comment %} Container {% endcomment %}
-<div id="container-{{ block.id }}">
+<div id="container-{{ block.id }}"  {{ block.shopify_attributes }}>
   {{ overlay }}
   {% content_for 'blocks' %}
 </div>
