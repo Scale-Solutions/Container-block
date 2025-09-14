@@ -1,3 +1,5 @@
+![screenshot-09_14, 07_00_51 PM](https://github.com/user-attachments/assets/8b2960be-f103-45d4-afd9-8d8260adec9b)
+
 # Container Theme Block for Shopify
 
 A Container theme block inspired by `group.liquid` from the **Horizon Theme**. This block extends functionality while maintaining clean design principles.
