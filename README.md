@@ -26,6 +26,8 @@ Merchants can use the **basic styling options** for quick and simple customizati
 ### Custom Styling
 **Custom styling options** are recommended for developers or users familiar with CSS.
 
+<img width="303" height="263" alt="Screenshot 2025-09-14 at 19 03 01" src="https://github.com/user-attachments/assets/271eef0f-7154-4c8c-b11c-6f4b1f808740" />
+
 ---
 
 ## Installation
