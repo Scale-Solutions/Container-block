@@ -46,8 +46,8 @@ Merchants can use the **basic styling options** for quick and simple customizati
 
 ## Developer Information
 
-- Developed by: **Sajaath Mohamed**  
-- Company: **Scale Solutions**  
+- Developed by: [**Sajaath Mohamed**](https://www.linkedin.com/in/sajaathmohamed/)
+- Company: [**Scale Solutions**](https://www.scalesolutions.de/) 
 
 ---
 
