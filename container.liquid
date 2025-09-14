@@ -3,7 +3,7 @@
   =============================================================================
   Inspired by: group.liquid from Horizon Theme
   Developed by: Sajaath mohamed
-  Company: Scale solutions
+  Company: Scale olutions
   Description: This block was custom-built to extend functionality while
                maintaining the design and structure principles of Horizon's
                group.liquid. Use this block within sections where grouping
@@ -11,15 +11,17 @@
 {%- enddoc -%}
 
 {% comment %} Styling {% endcomment %}
+{% assign container_id = "#container-" | append: block.id %}
 {% style %}
-  #container-{{ block.id }}{
+  {{ container_id }}{
     position: relative;
     background-color: {{ block.settings.background_color }};
     color: {{ block.settings.text_color }}; 
-    *{
+  }  
+  {{ container_id }} *{
       z-index: 2;
-    }
-    .background-media{
+  }
+  {{ container_id }} .background-media{
       position: absolute;
       top: 0;
       left: 0;
@@ -27,24 +29,23 @@
       height: 100%;
       z-index:1;
       overflow: hidden;
-    }
+  }
 
-    .background-media video{
+  {{ container_id }} .background-media video{
       width: 100%;
       height: 100%;
       object-fit: {{ block.settings.video_position }};
-    }
-    .background-media img{
+  }
+  {{ container_id }} .background-media img{
       width: 100%;
       height: 100%;
       object-fit: {{ block.settings.background_image_position }};
-    }
-    .container_block__link{
+  }
+  {{ container_id }} .container_block__link{
       width: 100%;
       height: 100%;
       position: absolute;
       z-index: 3;
-    }
   }
 
   {% if block.settings.styling_level == "basic" %}
@@ -67,7 +68,7 @@
       endcapture
     %}
 
-    #container-{{ block.id }}{
+    {{ container_id }}{
       display: flex;
       flex-direction: {{ block.settings.content_direction }};
       justify-content: {{ block.settings.horizontal_alignment }};
@@ -82,33 +83,35 @@
         border: solid {{ block.settings.border_width }}px {{ block.settings.border_color }};    
         border-radius: {{ block.settings.border_radius }}px;
       {% endif %}
-
-      .background-media{
+    }
+    {{ container_id }} .background-media{
         {% if block.settings.border == "solid" %}
           border-radius: {{ block.settings.border_radius }}px;
         {% endif %}
-      }
+    }
 
       {% if block.settings.enable_mobile_styling %}
         /* mobile styling */
         @media screen and (max-width: 749px) {
-          display: flex;
-          flex-direction: {{ block.settings.content_direction_mobile }};
-          justify-content: {{ block.settings.horizontal_alignment_mobile }};
-          align-items: {{ block.settings.vertical_alignment_mobile }};
-          gap: {{ block.settings.gap_mobile }}px;
-          flex-wrap: {{ flex_wrap_mobile }};
-          width: {% if block.settings.width_mobile > 0 %}{{ block.settings.width_mobile }}%{%else%}auto{%endif%};
-          height: {% if block.settings.height_mobile > 0 %}{{ block.settings.height_mobile }}%{%else%}auto{%endif%};
-          border-radius: {{ block.settings.border_radius_mobile }}px;
-          padding-inline: {{ block.settings.padding_inline_mobile }}px;
-          padding-block: {{ block.settings.padding_block_mobile }}px;
-          {% if block.settings.border_mobile == "solid" %}
-            border: solid {{ block.settings.border_width_mobile }}px {{ block.settings.border_color_mobile }};    
+          {{ container_id }}{
+            display: flex;
+            flex-direction: {{ block.settings.content_direction_mobile }};
+            justify-content: {{ block.settings.horizontal_alignment_mobile }};
+            align-items: {{ block.settings.vertical_alignment_mobile }};
+            gap: {{ block.settings.gap_mobile }}px;
+            flex-wrap: {{ flex_wrap_mobile }};
+            width: {% if block.settings.width_mobile > 0 %}{{ block.settings.width_mobile }}%{%else%}auto{%endif%};
+            height: {% if block.settings.height_mobile > 0 %}{{ block.settings.height_mobile }}%{%else%}auto{%endif%};
             border-radius: {{ block.settings.border_radius_mobile }}px;
-          {% endif %}
+            padding-inline: {{ block.settings.padding_inline_mobile }}px;
+            padding-block: {{ block.settings.padding_block_mobile }}px;
+            {% if block.settings.border_mobile == "solid" %}
+              border: solid {{ block.settings.border_width_mobile }}px {{ block.settings.border_color_mobile }};    
+              border-radius: {{ block.settings.border_radius_mobile }}px;
+            {% endif %}
+          }
 
-          .background-media{
+          {{ container_id }} .background-media{
             {% if block.settings.border_mobile == "solid" %}
               border-radius: {{ block.settings.border_radius_mobile }}px;
             {% endif %}
@@ -116,7 +119,7 @@
         }
       {% endif %}
 
-    }
+    
   {% endif %}
 
   {% if block.settings.styling_level == "advance" %}
@@ -131,7 +134,7 @@
       endcapture 
     %}
 
-    #container-{{ block.id }}{
+    {{ container_id }}{
       display: flex;
       flex-direction: {{ block.settings.advanced_content_direction }};
       justify-content: {{ block.settings.advanced_horizontal_alignment }};
@@ -153,13 +156,14 @@
         border-radius: {{ block.settings.advanced_border_radius }}px;
       {% endif %}
 
-      .background-media{
-        {% if block.settings.advanced_border == "solid" %}
-          border-radius: {{ block.settings.advanced_border_radius }}px;
-        {% endif %}
-      }
       {{ block.settings.advanced_css }}
+    }
 
+    {{ container_id }} .background-media{
+      {% if block.settings.advanced_border == "solid" %}
+        border-radius: {{ block.settings.advanced_border_radius }}px;
+      {% endif %}
+    }
 
       {% for i in (1..3) %}
         {% assign media_query = "advanced_media_query_" | append : i %}
@@ -184,43 +188,44 @@
             {% assign css = "advanced_media_query_" | append : i | append: "_css" %}
 
             @media screen and ({{ block.settings[screen_width] }}-width: {{ block.settings[screen_size] }}px) {
-              flex-direction: {{ block.settings[content_direction] }};
-              justify-content: {{ block.settings[horizontal_alignment] }};
-              align-items: {{ block.settings[vertical_alignment] }};
-              gap: {{ block.settings[gap] }}px;
-              flex-wrap: {%liquid 
-                if block.settings[wrap_content] 
-                  echo "wrap" 
-                else 
-                  echo "nowrap" 
-                endif
-              %};
-              width: {% if block.settings[width] > 0 %}{{ block.settings[width] }}%{%else%}auto{%endif%};
-              {% if block.settings[max_width] > 0 and block.settings[width] == 0 %}
-                max-width: {{ block.settings[max_width] }}%;
-              {% endif %}  
-              height: {% if block.settings[height] > 0 %}{{ block.settings[height] }}%{%else%}auto{%endif%};
-              {% if block.settings[max_height] > 0 and block.settings[height] == 0 %}
-                max-height: {{ block.settings[max_height] }}%;
-              {% endif %}  
-              padding-inline: {{ block.settings[padding_inline] }}px;
-              padding-block: {{ block.settings[padding_block] }}px;
-              {% if block.settings[border] == "solid" %}
-                border: solid {{ block.settings[border_width] }}px {{ block.settings[border_color] }};    
-                border-radius: {{ block.settings[border_radius] }}px;
-              {% endif %}
+              {{ container_id }}{
+                flex-direction: {{ block.settings[content_direction] }};
+                justify-content: {{ block.settings[horizontal_alignment] }};
+                align-items: {{ block.settings[vertical_alignment] }};
+                gap: {{ block.settings[gap] }}px;
+                flex-wrap: {%liquid 
+                  if block.settings[wrap_content] 
+                    echo "wrap" 
+                  else 
+                    echo "nowrap" 
+                  endif
+                %};
+                width: {% if block.settings[width] > 0 %}{{ block.settings[width] }}%{%else%}auto{%endif%};
+                {% if block.settings[max_width] > 0 and block.settings[width] == 0 %}
+                  max-width: {{ block.settings[max_width] }}%;
+                {% endif %}  
+                height: {% if block.settings[height] > 0 %}{{ block.settings[height] }}%{%else%}auto{%endif%};
+                {% if block.settings[max_height] > 0 and block.settings[height] == 0 %}
+                  max-height: {{ block.settings[max_height] }}%;
+                {% endif %}  
+                padding-inline: {{ block.settings[padding_inline] }}px;
+                padding-block: {{ block.settings[padding_block] }}px;
+                {% if block.settings[border] == "solid" %}
+                  border: solid {{ block.settings[border_width] }}px {{ block.settings[border_color] }};    
+                  border-radius: {{ block.settings[border_radius] }}px;
+                {% endif %}
 
-              .background-media{
+                {{ block.settings[css] }}
+              }
+              {{ container_id }} .background-media{
                 {% if block.settings[border] == "solid" %}
                   border-radius: {{ block.settings[border_radius] }}px;
                 {% endif %}
               }
-              {{ block.settings[css] }}
             }
         {% endif %}    
       {% endfor %}
-    }
-
+    
   {% endif %}
 {% endstyle %}
 {% comment %} Styling End {% endcomment %}
@@ -268,7 +273,7 @@
 
 
 {% comment %} Container {% endcomment %}
-<div id="container-{{ block.id }}"  {{ block.shopify_attributes }}>
+<div id="container-{{ block.id }}" class="{{ block.settings.advanced_classes }}" {{ block.shopify_attributes }}>
   {{ overlay }}
   {% content_for 'blocks' %}
 </div>
@@ -287,10 +292,6 @@
     }
   ],
   "settings": [
-    {
-      "type": "paragraph",
-      "content": "Merchants can use the basic styling options, while advanced styling is recommended only for developers or users familiar with CSS."
-    },
     {
       "type": "select",
       "id": "styling_level",
@@ -675,13 +676,6 @@
       "default": "#000",
       "visible_if": "{{ block.settings.styling_level == 'basic' and block.settings.border_mobile != 'none' and block.settings.enable_mobile_styling }}"
     },
-
-
-
-
-
-
-
     {
       "type": "header",
       "content": "Advance styling",
@@ -888,6 +882,12 @@
       "type": "textarea",
       "id": "advanced_css",
       "label": "ccs",
+      "visible_if": "{{ block.settings.styling_level == 'advance' }}"
+    },
+    {
+      "type": "text",
+      "id": "advanced_classes",
+      "label": "Class",
       "visible_if": "{{ block.settings.styling_level == 'advance' }}"
     },
 
