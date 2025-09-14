@@ -21,6 +21,9 @@ Merchants can use the **basic styling options** for quick and simple customizati
 ### Advanced Styling
 **Advanced styling options** are recommended for developers or users familiar with CSS.
 
+### Custom Styling
+**Custom styling options** are recommended for developers or users familiar with CSS.
+
 ---
 
 ## Installation
